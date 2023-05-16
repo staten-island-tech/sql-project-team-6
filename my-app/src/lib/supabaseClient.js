@@ -1,16 +1,3 @@
-<template></template>
+import { createClient } from '@supabase/supabase-js'
 
-<script import { reactive, toRefs } from 'vue'
-
-export default {
-    setup () {
-        const state = reactive({
-            count: 0,
-        })
-    
-        return {
-            ...toRefs(state),
-        }
-    }
-}>
-</script>
+export const supabase = createClient('https://<project>.supabase.co', '<your-anon-key>')
