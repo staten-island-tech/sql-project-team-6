@@ -1,25 +1,21 @@
 <script setup>
-import { onMounted, ref } from 'vue'
-import Account from './components/Account.vue'
-import Auth from './components/Auth.vue'
-import { supabase } from './supabase'
+import { ref, onMounted } from 'vue'
+import { supabase } from './lib/supabaseClient'
 
-const session = ref()
+const countries = ref([])
+
+async function getCountries() {
+  const { data } = await supabase.from('countries').select()
+  countries.value = data
+}
 
 onMounted(() => {
-  supabase.auth.getSession().then(({ data }) => {
-    session.value = data.session
-  })
-
-  supabase.auth.onAuthStateChange((_, _session) => {
-    session.value = _session
-  })
+  getCountries()
 })
 </script>
 
 <template>
-  <div class="container" style="padding: 50px 0 100px 0">
-    <Account v-if="session" :session="session" />
-    <Auth v-else />
-  </div>
+  <ul>
+    <li v-for="country in countries" :key="country.id">{{ country.name }}</li>
+  </ul>
 </template>
